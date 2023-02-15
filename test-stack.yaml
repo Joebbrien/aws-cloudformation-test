@@ -1,41 +1,31 @@
----
-Mappings:
-  RegionEC2InstanceImageMap:
-    us-east-2:
-      HVM64: ami-02de934ca4f3289e0 
-      HVM32: ami-0233c2d874b811deb
-    ap-southeast-1:
-      HVM64: ami-0390917f7df0de28c
-      HVM32: ami-0e5182fad1edfaa68
+AWSTemplateFormatVersion: 2010-09-09
+Description: Part 1 - Build a webapp stack with CloudFormation
 
-Parameters:
-  EC2InstanceType:
-    Description: The Instance Type Chosen for EC2
-    Type: String
-    
 Resources:
-  TekLoonTestInstance:
+  WebAppInstance:
     Type: AWS::EC2::Instance
     Properties:
-      AvailabilityZone: ap-southeast-1a
-      ImageId: !FindInMap
-        - RegionEC2InstanceImageMap
-        - !Ref 'AWS::Region'
-        - HVM64
-      InstanceType: !Ref EC2InstanceType
-      SecurityGroups:
-        - !Ref HTTPSecurityGroup
+      ImageId: ami-0d5eff06f840b45e9 # ImageID valid only in us-east-1 region
+      InstanceType: t2.micro
+      KeyName: joebbrian-account # <-- Change to use your key-pair name
+      SecurityGroupIds:
+        - !Ref WebAppSecurityGroup
 
-  HTTPSecurityGroup:
+  WebAppSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable port 80 and port 443
+      GroupName: !Join ["-", [webapp-security-group, dev]]
+      GroupDescription: "Allow HTTP/HTTPS and SSH inbound and outbound traffic"
       SecurityGroupIngress:
-      - CidrIp: 0.0.0.0/0
-        FromPort: 80
-        IpProtocol: tcp
-        ToPort: 80
-      - CidrIp: 0.0.0.0/0
-        FromPort: 443
-        IpProtocol: tcp
-        ToPort: 443
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
