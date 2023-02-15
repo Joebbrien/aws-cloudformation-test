@@ -32,14 +32,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.ACCESS_KEYS }}
           aws-secret-access-key: ${{ secrets.ACCESS_KEY_SECRET }}
-          aws-region: ${{ github.event.inputs.region }}
+          aws-region: us-east-1
 
       # Deploy to AWS CloudFormation
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: tekloon-test-stack
+          name: first-test-stack
           template: test-stack.yaml
           no-fail-on-empty-changeset: "1"
-          parameter-overrides: "EC2InstanceType=t2.micro"
   
