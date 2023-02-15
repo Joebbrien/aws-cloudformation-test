@@ -12,7 +12,7 @@ on:
       region:
         description: 'AWS Region to deploy to'
         required: true
-        default: 'ap-southeast-1'
+        default: 'us-east-1'
 
 
 jobs:
